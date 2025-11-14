@@ -1,0 +1,24 @@
+spring:
+
+  application:
+    name: Homi Finance Management
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/GHouse
+    username: Admin_Homi
+    password: HomiFMApp
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 5
+      minimum-idle: 2
+      idle-timeout: 30000
+      max-lifetime: 60000
+      validation-timeout: 5000
+      initialization-fail-timeout: 0
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
