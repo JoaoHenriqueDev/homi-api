@@ -4,9 +4,9 @@ spring:
     name: Homi Finance Management
 
   datasource:
-    url: jdbc:mysql://localhost:3306/GHouse
-    username: Admin_Homi
-    password: HomiFMApp
+    url: jdbc:mysql://localhost:3307/homiAppDB
+    username: homiadm
+    password: homi1828adm
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 30000

@@ -1,0 +1,23 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: homibd
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_USER: homiadm
+      MYSQL_PASSWORD: homi1828adm
+      MYSQL_DATABASE: homiAppDB
+    ports:
+      - "3307:3306"
+    volumes:
+      - homi-db-data:/var/lib/mysql
+    networks:
+      - Homi-App
+    restart: always
+
+volumes:
+  homi-db-data:
+
+networks:
+  Homi-App:
+    external: true
