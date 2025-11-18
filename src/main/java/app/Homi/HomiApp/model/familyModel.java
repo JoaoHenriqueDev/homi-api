@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table( name = "users")
+@Table(name = "families")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class userModel {
+@AllArgsConstructor
+public class familyModel {
 }
