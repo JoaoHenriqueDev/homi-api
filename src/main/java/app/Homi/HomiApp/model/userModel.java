@@ -1,5 +1,6 @@
 package app.Homi.HomiApp.model;
 
+import app.Homi.HomiApp.Enum.userEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,8 @@ public class userModel {
     private String celular;
     @Column(name = "created_at")
     private LocalDateTime created;
+    @Column(name = "role")
+    private userEnum role;
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 }
