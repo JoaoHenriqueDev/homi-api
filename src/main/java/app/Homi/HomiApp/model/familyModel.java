@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "families")
@@ -17,16 +18,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class familyModel {
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
-    private BigInteger id;
+    @GeneratedValue( strategy = GenerationType.UUID)
+    private UUID id;
     @Column(name = "name")
     private String name;
     @Column(name = "description")
     private String description;
     @Column(name = "owner_user_id")
-    private BigInteger idUserAdmin;
-    @Column(name = "invite_link")
-    private String convite;
+    private UUID idUserAdmin;
+    @Column(name = "invite_link", columnDefinition = "BINARY(16)")
+    private UUID convite;
     @Column(name = "created_at")
-    private LocalDateTime dataCriacao;
+    private LocalDateTime dataCriacao = LocalDateTime.now();
 }

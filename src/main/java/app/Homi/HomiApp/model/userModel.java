@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table( name = "users")
@@ -19,8 +20,8 @@ import java.time.LocalDateTime;
 public class userModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @Column(name = "email")
     private String email;
     @Column(name = "name")
@@ -32,9 +33,5 @@ public class userModel {
     @Column(name = "phone")
     private String celular;
     @Column(name = "created_at")
-    private LocalDateTime created;
-    @Column(name = "role")
-    private userEnum role;
-    @Column(name = "last_login")
-    private LocalDateTime lastLogin;
+    private LocalDateTime created = LocalDateTime.now();
 }

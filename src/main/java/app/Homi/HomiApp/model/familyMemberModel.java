@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "family_members")
@@ -18,14 +19,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class familyMemberModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
-    @Column(name = "family_id")
-    private BigInteger idFamily;
-    @Column(name = "user_id")
-    private BigInteger idUser;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    @Column(name = "family_id", columnDefinition = "BINARY(16)")
+    private UUID idFamily;
+    @Column(name = "user_id", columnDefinition = "BINARY(16)")
+    private UUID idUser;
     @Column(name = "role")
-    private menberFamilyEnum roleUser;
+    private String roleUser;
     @Column(name = "is_owner")
     private Boolean criador;
     @Column(name = "joined_at")
