@@ -3,14 +3,18 @@ package app.Homi.HomiApp.mapper;
 import app.Homi.HomiApp.dto.familyRequestDto;
 import app.Homi.HomiApp.dto.familyResponseDto;
 import app.Homi.HomiApp.model.familyModel;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
-public interface familyMapper {
+public class familyMapper {
 
-    @Mapping(target = "id", ignore = true)
-    familyModel toEntity(familyRequestDto familyRequestDto);
+    public static familyModel toEntity(familyRequestDto familyRequestDto){
+        familyModel family = new familyModel();
+        family.setName(familyRequestDto.name());
+        family.setDescription(familyRequestDto.description());
+        family.setIdUserAdmin(familyRequestDto.idUser());
+        return family;
+    }
 
-    familyResponseDto toDto(familyModel familyModel);
+    public static familyResponseDto toDto(familyModel familyModel){
+        return new familyResponseDto(familyModel.getId(), familyModel.getName(),familyModel.getDescription(),familyModel.getConvite());
+    }
 }
