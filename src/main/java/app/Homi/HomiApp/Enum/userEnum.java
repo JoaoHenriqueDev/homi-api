@@ -1,6 +1,6 @@
 package app.Homi.HomiApp.Enum;
 
 public enum userEnum {
-    USER,
+    MEMBER,
     ADMIN
 }
