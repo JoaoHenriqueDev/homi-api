@@ -34,4 +34,7 @@ public class userModel {
     private String celular;
     @Column(name = "created_at")
     private LocalDateTime created = LocalDateTime.now();
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private userEnum role;
 }
