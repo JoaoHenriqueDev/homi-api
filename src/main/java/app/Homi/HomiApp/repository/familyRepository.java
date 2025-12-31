@@ -14,7 +14,7 @@ public interface familyRepository extends JpaRepository<familyModel, UUID> {
 
     Optional<familyModel> findByConvite(UUID convite);
 
-    Optional<familyModel> findByName(String name);
+    List<familyModel> findByName(String name);
 
-
+    Optional<familyModel> findById(UUID uuid);
 }

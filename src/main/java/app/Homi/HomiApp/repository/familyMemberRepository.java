@@ -14,8 +14,8 @@ import java.util.UUID;
 
 @Repository
 public interface familyMemberRepository extends JpaRepository<familyMemberModel, UUID> {
+
     List<familyMemberModel> findByIdFamily(UUID idFamily);
-    Optional<familyMemberModel> findByIdUser(UUID idUser);
 
     Optional<familyMemberModel>
     findByIdFamilyAndIdUser(UUID idFamily, UUID idUser);
@@ -23,4 +23,6 @@ public interface familyMemberRepository extends JpaRepository<familyMemberModel,
     @Modifying
     @Transactional
     void deleteByIdFamilyAndIdUser(UUID idFamily, UUID idUser);
+
+    List<familyMemberModel> findByIdUser(UUID idUser);
 }
