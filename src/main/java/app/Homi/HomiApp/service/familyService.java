@@ -1,7 +1,9 @@
 package app.Homi.HomiApp.service;
 
 import app.Homi.HomiApp.dto.familyRequestDto;
+import app.Homi.HomiApp.dto.familyRequestUpdateDto;
 import app.Homi.HomiApp.dto.familyResponseDto;
+import app.Homi.HomiApp.dto.familyResponseListDto;
 import app.Homi.HomiApp.mapper.familyMapper;
 import app.Homi.HomiApp.model.familyMemberModel;
 import app.Homi.HomiApp.model.familyModel;
@@ -25,9 +27,10 @@ public class familyService {
     private final userRepository userRepository;
 
     @Transactional
-    public familyResponseDto criarGrupo(familyRequestDto familyRequestDto){
+    public familyResponseDto criarGrupo(UUID id, familyRequestDto familyRequestDto){
         familyModel family = familyMapper.toEntity(familyRequestDto);
         family.setConvite(UUID.randomUUID());
+        family.setIdUserAdmin(id);
         familyRepository.save(family);
 
         familyMemberModel member = new familyMemberModel();
@@ -72,29 +75,34 @@ public class familyService {
 
         familyMemberRepository.save(member);
     }
-    public familyResponseDto atualizarDadosGrupo(UUID idUser,UUID id,familyRequestDto familyRequestDto){
-        familyMemberModel user = familyMemberRepository
-                .findByIdUser(idUser)
-                .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
-        if(!user.getRoleUser()
-                .equals("ADMIN")){
-            throw new IllegalArgumentException("Apenas o adminstrador do grupo pode fazer mudanças nele");
-        }
+    public familyResponseDto atualizarDadosGrupo(UUID idUser, UUID id, familyRequestUpdateDto familyRequestUpdateDto){
+        familyMemberModel group = familyMemberRepository
+                .findByIdFamily(id)
+                .stream()
+                .filter(f -> f.getIdUser().equals(idUser))
+                .filter(r -> r.getRoleUser().equals("ADMIN"))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("\"Usuario não encontrado ou não o usuario é admin desse grupo\""));
         familyModel family = familyRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
-        family.setName(familyRequestDto.name());
-        family.setDescription(familyRequestDto.description());
+        family.setName(familyRequestUpdateDto.name());
+        family.setDescription(familyRequestUpdateDto.description());
         return familyMapper.toDto(familyRepository.save(family));
     }
 
-    public familyResponseDto buscarPorNome(String name){
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Nome da família é obrigatório");
-        }
-        familyModel family = familyRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
-        return familyMapper.toDto(family);
-    }
+//    public List<familyResponseDto> buscarPorNome(String name){
+//        if (name == null || name.isBlank()) {
+//            throw new IllegalArgumentException("Nome da família é obrigatório");
+//        }
+//        List<familyModel> families = familyRepository.findByName(name);
+//        if(families.isEmpty()){
+//                throw new EntityNotFoundException("Grupo não encontrado");
+//        }
+//        return families.stream()
+//                .map(familyMapper::toDto)
+//                .toList();
+//    }
 
     public void deletarUsuario(UUID idAdmin, UUID idUser, UUID idGrupo){
         familyMemberModel admin = familyMemberRepository
@@ -135,20 +143,38 @@ public class familyService {
 
     @Transactional
     public void deletarFamilia(UUID idAdmin, UUID id){
-        familyModel family = familyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
-
-        familyMemberModel admin = familyMemberRepository.findByIdUser(idAdmin).orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
-        if(!admin.getRoleUser().equals("ADMIN")){
-            throw new IllegalArgumentException("Apenas o administrador pode realizar essa ação dentro do grupo");
-        }
+        familyMemberModel admin = familyMemberRepository
+                .findByIdFamily(id)
+                .stream()
+                .filter(f -> f.getIdUser().equals(idAdmin))
+                .filter(r -> r.getRoleUser().equals("ADMIN"))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("\"Usuario não encontrado ou não o usuario é admin desse grupo\""));
 
         List<familyMemberModel> membros = familyMemberRepository.findByIdFamily(id);
-        if (membros != null && !membros.isEmpty()) {
+        if (!membros.isEmpty()) {
             familyMemberRepository.deleteAll(membros);
         }
 
         familyRepository.deleteById(id);
+    }
+
+    public List<familyResponseListDto> listarGrupos(UUID idUser){
+        userRepository.findById(idUser)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+        List<familyMemberModel> memberships =
+                familyMemberRepository.findByIdUser(idUser);
+
+        if (memberships.isEmpty()) {
+            return List.of();
+        }
+        return memberships.stream()
+                .map(fm -> familyRepository.findById(fm.getIdFamily())
+                        .orElseThrow(() ->
+                                new EntityNotFoundException("Grupo não encontrado")))
+                .map(familyMapper::toDtolist)
+                .toList();
     }
 
 }

@@ -1,5 +1,6 @@
 package app.Homi.HomiApp.service;
 
+import app.Homi.HomiApp.Enum.userEnum;
 import app.Homi.HomiApp.dto.loginRequestDto;
 import app.Homi.HomiApp.dto.userRequestDto;
 import app.Homi.HomiApp.dto.userRequestUpdateDto;
@@ -23,6 +24,7 @@ public class userService {
         userModel user = userMapper.toEntity(userRequestDto);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setRole(userEnum.USER);
         userModel userSalvo = repository.save(user);
         return userMapper.toDto(userSalvo);
     }
