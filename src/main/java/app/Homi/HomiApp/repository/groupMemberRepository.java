@@ -30,7 +30,7 @@ public interface groupMemberRepository extends JpaRepository<groupMemberModel, U
     SELECT f
     FROM groupModel f
     JOIN groupMemberModel fm
-        ON fm.idgroup = f.id
+        ON fm.idGroup = f.id
     WHERE fm.idUser = :userId
 """)
     List<groupModel> findFamiliesByUserId(@Param("userId") UUID userId);
