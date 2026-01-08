@@ -48,7 +48,7 @@ public class groupService {
                 .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
 
         Optional<groupMemberModel> membroGrupoOpt =
-                groupMemberRepository.findByIdgroupAndIdUser(
+                groupMemberRepository.findByIdGroupAndIdUser(
                         group.getId(),
                         idUser
                 );
@@ -74,7 +74,7 @@ public class groupService {
     }
     public groupResponseDto atualizarDadosGrupo(UUID idUser, UUID id, groupRequestUpdateDto groupRequestUpdateDto){
         groupMemberModel group = groupMemberRepository
-                .findByIdgroup(id)
+                .findByIdGroup(id)
                 .stream()
                 .filter(f -> f.getIdUser().equals(idUser))
                 .filter(r -> r.getRoleUser().equals("ADMIN"))
@@ -90,7 +90,7 @@ public class groupService {
 
     public void deletarUsuario(UUID idAdmin, UUID idUser, UUID idGrupo){
         groupMemberModel admin = groupMemberRepository
-                .findByIdgroupAndIdUser(idGrupo, idAdmin)
+                .findByIdGroupAndIdUser(idGrupo, idAdmin)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Admin não pertence a esse grupo")
                 );
@@ -108,7 +108,7 @@ public class groupService {
         }
 
         groupMemberModel usuario = groupMemberRepository
-                .findByIdgroupAndIdUser(idGrupo, idUser)
+                .findByIdGroupAndIdUser(idGrupo, idUser)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Usuário não pertence a esse grupo")
                 );
@@ -119,7 +119,7 @@ public class groupService {
             );
         }
 
-        groupMemberRepository.deleteByIdgroupAndIdUser(
+        groupMemberRepository.deleteByIdGroupAndIdUser(
                 idGrupo,
                 idUser
         );
@@ -128,14 +128,14 @@ public class groupService {
     @Transactional
     public void deletarFamilia(UUID idAdmin, UUID id){
         groupMemberModel admin = groupMemberRepository
-                .findByIdgroup(id)
+                .findByIdGroup(id)
                 .stream()
                 .filter(f -> f.getIdUser().equals(idAdmin))
                 .filter(r -> r.getRoleUser().equals("ADMIN"))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("\"Usuario não encontrado ou não o usuario é admin desse grupo\""));
 
-        List<groupMemberModel> membros = groupMemberRepository.findByIdgroup(id);
+        List<groupMemberModel> membros = groupMemberRepository.findByIdGroup(id);
         if (!membros.isEmpty()) {
             groupMemberRepository.deleteAll(membros);
         }
@@ -145,7 +145,7 @@ public class groupService {
 
     public groupResponseDto detalhesDeGrupo(UUID idGroup, UUID idUser){
         groupMemberModel admin = groupMemberRepository
-                .findByIdgroup(idGroup)
+                .findByIdGroup(idGroup)
                 .stream()
                 .filter(f -> f.getIdUser().equals(idUser))
                 .findFirst()

@@ -17,14 +17,14 @@ import java.util.UUID;
 @Repository
 public interface groupMemberRepository extends JpaRepository<groupMemberModel, UUID> {
 
-    List<groupMemberModel> findByIdgroup(UUID idgroup);
+    List<groupMemberModel> findByIdGroup(UUID idgroup);
 
     Optional<groupMemberModel>
-    findByIdgroupAndIdUser(UUID idgroup, UUID idUser);
+    findByIdGroupAndIdUser(UUID idgroup, UUID idUser);
 
     @Modifying
     @Transactional
-    void deleteByIdgroupAndIdUser(UUID idgroup, UUID idUser);
+    void deleteByIdGroupAndIdUser(UUID idgroup, UUID idUser);
 
     @Query("""
     SELECT f
@@ -35,7 +35,7 @@ public interface groupMemberRepository extends JpaRepository<groupMemberModel, U
 """)
     List<groupModel> findFamiliesByUserId(@Param("userId") UUID userId);
 
-    List<userModel> findUsersByidgroup(UUID groupId);
+    List<userModel> findUsersByidGroup(UUID groupId);
 
     List<groupMemberModel> findByIdUser(UUID idUser);
 }
