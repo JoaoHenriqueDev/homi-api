@@ -6,6 +6,7 @@ import app.Homi.HomiApp.dto.userRequestUpdateDto;
 import app.Homi.HomiApp.dto.userResponseDto;
 import app.Homi.HomiApp.security.userDetailsImpl;
 import app.Homi.HomiApp.service.userService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +21,7 @@ public class userController {
     private final userService service;
 
     @PutMapping("/update")
-    public ResponseEntity<userResponseDto> updateUsuario(@AuthenticationPrincipal userDetailsImpl user, @RequestBody userRequestUpdateDto userRequestUpdateDto){
+    public ResponseEntity<userResponseDto> updateUsuario(@AuthenticationPrincipal userDetailsImpl user, @RequestBody @Valid userRequestUpdateDto userRequestUpdateDto){
         userResponseDto response = service.atualizarUsuario(user.getId(), userRequestUpdateDto);
         return ResponseEntity.ok(response);
     }

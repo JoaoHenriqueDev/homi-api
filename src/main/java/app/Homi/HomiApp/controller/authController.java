@@ -8,15 +8,14 @@ import app.Homi.HomiApp.model.userModel;
 import app.Homi.HomiApp.repository.userRepository;
 import app.Homi.HomiApp.security.jwtService;
 import app.Homi.HomiApp.service.userService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -30,7 +29,7 @@ public class authController {
     private final userService service;
 
     @PostMapping("/login")
-    public ResponseEntity<loginResponseDto> login(@RequestBody loginRequestDto request) {
+    public ResponseEntity<loginResponseDto> login(@RequestBody @Valid loginRequestDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
@@ -44,7 +43,7 @@ public class authController {
         return ResponseEntity.ok(new loginResponseDto(token));
     }
     @PostMapping("/register")
-    public ResponseEntity<?> registrarUsuario(@RequestBody userRequestDto userRequestDto){
+    public ResponseEntity<?> registrarUsuario(@RequestBody @Valid userRequestDto userRequestDto){
         userResponseDto user = service.cadastrarUsuario(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 Map.of(
@@ -53,6 +52,5 @@ public class authController {
                 )
         );
     }
-
 
 }

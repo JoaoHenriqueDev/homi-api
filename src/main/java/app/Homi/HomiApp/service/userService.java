@@ -19,8 +19,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class userService {
     private final userRepository repository;
-
     public userResponseDto cadastrarUsuario(userRequestDto userRequestDto){
+        if(userRequestDto.email().isEmpty() || repository.findByEmail(userRequestDto.email()).isPresent()){
+            throw new IllegalArgumentException("Email ou senha incorretos");
+        }
         userModel user = userMapper.toEntity(userRequestDto);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));

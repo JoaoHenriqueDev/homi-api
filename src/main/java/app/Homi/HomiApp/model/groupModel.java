@@ -6,17 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "families")
+@Table(name = "groups")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class familyModel {
+public class groupModel {
     @Id
     @GeneratedValue( strategy = GenerationType.UUID)
     private UUID id;
@@ -24,10 +23,12 @@ public class familyModel {
     private String name;
     @Column(name = "description")
     private String description;
-    @Column(name = "owner_user_id")
+    @Column(name = "created_by")
     private UUID idUserAdmin;
-    @Column(name = "invite_link", columnDefinition = "BINARY(16)")
+    @Column(name = "invite_link")
     private UUID convite;
     @Column(name = "created_at")
     private LocalDateTime dataCriacao = LocalDateTime.now();
+    @Column(name = "fundo_url")
+    private String fotoUrl;
 }

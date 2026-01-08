@@ -26,9 +26,9 @@ public class userModel {
     private String email;
     @Column(name = "name")
     private String name;
-    @Column(name = "password_hash")
+    @Column(name = "password")
     private String password;
-    @Column(name = "avatar_url")
+    @Column(name = "photo_url")
     private String fotoURL;
     @Column(name = "phone")
     private String celular;
