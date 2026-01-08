@@ -51,7 +51,6 @@ public class userService {
             user.setName(userRequestUpdateDto.name());
             user.setEmail(userRequestUpdateDto.email());
             user.setCelular(userRequestUpdateDto.celular());
-            user.setFotoURL(userRequestUpdateDto.fotoUrl());
         userModel userSave = repository.save(user);
         return userMapper.toDto(userSave);
     }
