@@ -1,9 +1,6 @@
 package app.Homi.HomiApp.controller;
 
-import app.Homi.HomiApp.dto.loginRequestDto;
-import app.Homi.HomiApp.dto.userRequestDto;
-import app.Homi.HomiApp.dto.userRequestUpdateDto;
-import app.Homi.HomiApp.dto.userResponseDto;
+import app.Homi.HomiApp.dto.*;
 import app.Homi.HomiApp.security.userDetailsImpl;
 import app.Homi.HomiApp.service.userService;
 import jakarta.validation.Valid;
@@ -21,14 +18,20 @@ public class userController {
     private final userService service;
 
     @PutMapping("/update")
-    public ResponseEntity<userResponseDto> updateUsuario(@AuthenticationPrincipal userDetailsImpl user, @RequestBody @Valid userRequestUpdateDto userRequestUpdateDto){
+    public ResponseEntity<apiResponseGeneric<userResponseDto>> updateUsuario(@AuthenticationPrincipal userDetailsImpl user, @RequestBody @Valid userRequestUpdateDto userRequestUpdateDto){
         userResponseDto response = service.atualizarUsuario(user.getId(), userRequestUpdateDto);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new apiResponseGeneric<>(
+                true,
+                "Dados do usuario atualizados com sucesso",
+                response
+        ));
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deletarUsuario(@AuthenticationPrincipal userDetailsImpl user){
         service.deletarUsuario(user.getId());
-        return ResponseEntity.ok("Usuario apagado");
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

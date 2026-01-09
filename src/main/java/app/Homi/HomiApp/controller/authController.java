@@ -1,9 +1,6 @@
 package app.Homi.HomiApp.controller;
 
-import app.Homi.HomiApp.dto.loginRequestDto;
-import app.Homi.HomiApp.dto.loginResponseDto;
-import app.Homi.HomiApp.dto.userRequestDto;
-import app.Homi.HomiApp.dto.userResponseDto;
+import app.Homi.HomiApp.dto.*;
 import app.Homi.HomiApp.model.userModel;
 import app.Homi.HomiApp.repository.userRepository;
 import app.Homi.HomiApp.security.jwtService;
@@ -29,7 +26,7 @@ public class authController {
     private final userService service;
 
     @PostMapping("/login")
-    public ResponseEntity<loginResponseDto> login(@RequestBody @Valid loginRequestDto request) {
+    public ResponseEntity<apiResponseGeneric<loginResponseDto>> login(@RequestBody @Valid loginRequestDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
@@ -40,7 +37,11 @@ public class authController {
                 .findByEmail(request.email())
                 .orElseThrow();
         String token = jwtService.generateToken(user);
-        return ResponseEntity.ok(new loginResponseDto(token));
+        return ResponseEntity.ok(new apiResponseGeneric<>(
+                true,
+                "Usuario logado com sucesso",
+                new loginResponseDto(token)
+        ));
     }
     @PostMapping("/register")
     public ResponseEntity<?> registrarUsuario(@RequestBody @Valid userRequestDto userRequestDto){
