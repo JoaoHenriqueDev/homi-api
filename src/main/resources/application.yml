@@ -38,6 +38,7 @@ server:
 cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
-  api-secret: ${CLOUDINARY_API_SECRET}]
-  app:
-    default-avatar-url: "https://res.cloudinary.com/seu_cloud/image/upload/default-avatar.png"
+  api-secret: ${CLOUDINARY_API_SECRET}
+
+app:
+  default-avatar-url: "https://res.cloudinary.com/seu_cloud/image/upload/default-avatar.png"
