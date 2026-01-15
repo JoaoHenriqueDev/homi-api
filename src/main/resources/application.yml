@@ -25,9 +25,19 @@ spring:
       properties:
         hibernate:
           format_sql: true
-
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
 jwt:
   secret: ${JWT_SECRET}
 
 server:
   port: ${PORT:8080}
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}]
+  app:
+    default-avatar-url: "https://res.cloudinary.com/seu_cloud/image/upload/default-avatar.png"
