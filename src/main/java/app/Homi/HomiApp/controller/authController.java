@@ -4,15 +4,18 @@ import app.Homi.HomiApp.dto.*;
 import app.Homi.HomiApp.model.userModel;
 import app.Homi.HomiApp.repository.userRepository;
 import app.Homi.HomiApp.security.jwtService;
+import app.Homi.HomiApp.service.authService;
 import app.Homi.HomiApp.service.userService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -23,7 +26,7 @@ public class authController {
     private final AuthenticationManager authenticationManager;
     private final jwtService jwtService;
     private final userRepository userRepository;
-    private final userService service;
+    private final authService service;
 
     @PostMapping("/login")
     public ResponseEntity<apiResponseGeneric<loginResponseDto>> login(@RequestBody @Valid loginRequestDto request) {
@@ -43,9 +46,12 @@ public class authController {
                 new loginResponseDto(token)
         ));
     }
-    @PostMapping("/register")
-    public ResponseEntity<?> registrarUsuario(@RequestBody @Valid userRequestDto userRequestDto){
-        userResponseDto user = service.cadastrarUsuario(userRequestDto);
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> registrarUsuario(
+            @RequestPart("data") @Valid userRequestDto data,
+            @RequestPart(value = "photo", required = false) MultipartFile photo
+    ){
+        userResponseDto user = service.cadastrarUsuario(data,photo);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 Map.of(
                         "message", "Usuário cadastrado com sucesso",

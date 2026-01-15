@@ -12,5 +12,7 @@ public record userRequestDto(
         @NotBlank(message = "Um ou mais campos não foram preenchidos corretamente")
         String password,
         @NotBlank(message = "Um ou mais campos não foram preenchidos corretamente")
-        String celular) {
+        String celular,
+        String foto
+) {
 }
