@@ -1,6 +1,7 @@
 package app.Homi.HomiApp.service;
 
 import app.Homi.HomiApp.dto.*;
+import app.Homi.HomiApp.exceptions.exceptions;
 import app.Homi.HomiApp.mapper.groupMapper;
 import app.Homi.HomiApp.model.groupMemberModel;
 import app.Homi.HomiApp.model.groupModel;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -58,38 +60,34 @@ public class groupService {
         return groupMapper.toDto(group);
     }
 
-    public void entrarNoGrupo(UUID invite, UUID idUser) throws Exception {
+    public void entrarNoGrupo(UUID invite, UUID idUser) {
+
+        // 1. Valida usuário
         userRepository.findById(idUser)
-                .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
+                .orElseThrow(() -> new exceptions.NotFoundException("Usuário não encontrado"));
 
+        // 2. Busca grupo pelo convite
         groupModel group = groupRepository.findByConvite(invite)
-                .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
+                .orElseThrow(() -> new exceptions.NotFoundException("Grupo não encontrado"));
 
-        Optional<groupMemberModel> membroGrupoOpt =
-                groupMemberRepository.findByIdGroupAndIdUser(
-                        group.getId(),
-                        idUser
-                );
+        // 3. Verifica se já é membro
+        boolean jaMembro = groupMemberRepository
+                .existsByIdGroupAndIdUser(group.getId(), idUser);
 
-        if (membroGrupoOpt.isPresent()) {
-
-            groupMemberModel membroGrupo = membroGrupoOpt.get();
-
-            if ("ADMIN".equals(membroGrupo.getRoleUser())) {
-                throw new IllegalStateException("Você já é ADMIN desse grupo");
-            }
-
-            throw new IllegalStateException("Usuário já pertence a esse grupo");
+        if (jaMembro) {
+            throw new exceptions.BusinessException("Usuário já faz parte do grupo");
         }
 
-        groupMemberModel member = new groupMemberModel();
-        member.setIdGroup(group.getId());
-        member.setIdUser(idUser);
-        member.setRoleUser("MENBER");
-        member.setCriador(false);
+        // 4. Cria vínculo
+        groupMemberModel membro = new groupMemberModel();
+        membro.setIdGroup(group.getId());
+        membro.setIdUser(idUser);
+        membro.setDataEntrada(LocalDateTime.now());
 
-        groupMemberRepository.save(member);
+        groupMemberRepository.save(membro);
     }
+
+
     public groupResponseDto atualizarDadosGrupo(UUID idUser, UUID id, groupRequestUpdateDto groupRequestUpdateDto){
         groupMemberModel group = groupMemberRepository
                 .findByIdGroup(id)

@@ -38,4 +38,6 @@ public interface groupMemberRepository extends JpaRepository<groupMemberModel, U
     List<userModel> findUsersByidGroup(UUID groupId);
 
     List<groupMemberModel> findByIdUser(UUID idUser);
+
+    Boolean existsByIdGroupAndIdUser(UUID idGroup, UUID idUser);
 }
