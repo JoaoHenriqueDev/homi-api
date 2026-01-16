@@ -6,6 +6,8 @@ import app.Homi.HomiApp.repository.userRepository;
 import app.Homi.HomiApp.security.jwtService;
 import app.Homi.HomiApp.service.authService;
 import app.Homi.HomiApp.service.userService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,10 +50,14 @@ public class authController {
     }
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registrarUsuario(
-            @RequestPart("data") @Valid userRequestDto data,
+            @RequestPart("data") String data,
             @RequestPart(value = "photo", required = false) MultipartFile photo
-    ){
-        userResponseDto user = service.cadastrarUsuario(data,photo);
+    ) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        userRequestDto userRequestDto =
+                mapper.readValue(data, userRequestDto.class);
+
+        userResponseDto user = service.cadastrarUsuario(userRequestDto,photo);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 Map.of(
                         "message", "Usuário cadastrado com sucesso",
