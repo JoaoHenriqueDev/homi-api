@@ -31,11 +31,7 @@ public class securityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.ignoringRequestMatchers(request ->
-                        "POST".equalsIgnoreCase(request.getMethod())
-                                && request.getRequestURI() != null
-                                && request.getRequestURI().contains("/auth/")
-                ))
+                .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

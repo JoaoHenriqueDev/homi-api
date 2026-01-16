@@ -3,7 +3,7 @@ spring:
     name: Homi Finance Management
 
   datasource:
-    url: ${DATABASE_URL}
+    url: ${DATABASE_URL:jdbc:postgresql}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     server:
@@ -17,12 +17,7 @@ spring:
       max-lifetime: 60000
       validation-timeout: 5000
       initialization-fail-timeout: 0
-      
-  logging:
-    level:
-      org:
-        springframework:
-          security: DEBUG
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -48,3 +43,9 @@ cloudinary:
 
 app:
   default-avatar-url: "https://res.cloudinary.com/seu_cloud/image/upload/default-avatar.png"
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
