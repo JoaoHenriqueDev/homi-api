@@ -81,6 +81,8 @@ public class groupService {
         // 4. Cria vínculo
         groupMemberModel membro = new groupMemberModel();
         membro.setIdGroup(group.getId());
+        membro.setRoleUser("MEMBER");
+        membro.setCriador(false);
         membro.setIdUser(idUser);
         membro.setDataEntrada(LocalDateTime.now());
 
