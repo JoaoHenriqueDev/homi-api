@@ -29,10 +29,13 @@ public class groupController {
     public ResponseEntity<groupResponseDto> criarGrupo(@AuthenticationPrincipal userDetailsImpl user,
                                                        @RequestPart("data") String data,
                                                        @RequestPart(value = "photo", required = false) MultipartFile photo) throws JsonProcessingException {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         ObjectMapper mapper = new ObjectMapper();
-        groupRequestDto groupRequestDto =
-                mapper.readValue(data, groupRequestDto.class);
-        groupResponseDto group = groupService.criarGrupo(user.getId(),groupRequestDto, photo);
+        groupRequestDto groupRequestDto = mapper.readValue(data, groupRequestDto.class);
+        groupResponseDto group = groupService.criarGrupo(user.getId(), groupRequestDto, photo);
         return ResponseEntity.status(HttpStatus.CREATED).body(group);
     }
 
