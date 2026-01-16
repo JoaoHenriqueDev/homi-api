@@ -3,13 +3,19 @@ package app.Homi.HomiApp.controller;
 import app.Homi.HomiApp.dto.groupRequestDto;
 import app.Homi.HomiApp.dto.groupRequestUpdateDto;
 import app.Homi.HomiApp.dto.groupResponseDto;
+import app.Homi.HomiApp.dto.userRequestDto;
 import app.Homi.HomiApp.security.userDetailsImpl;
 import app.Homi.HomiApp.service.groupService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -19,10 +25,15 @@ import java.util.UUID;
 public class groupController {
     private final groupService groupService;
 
-    @PostMapping("/create")
-    public ResponseEntity<groupResponseDto> criarGrupo(@AuthenticationPrincipal userDetailsImpl user, @RequestBody @Valid groupRequestDto groupRequestDto){
-        groupResponseDto group = groupService.criarGrupo(user.getId(),groupRequestDto);
-        return ResponseEntity.ok(group);
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<groupResponseDto> criarGrupo(@AuthenticationPrincipal userDetailsImpl user,
+                                                       @RequestPart("data") String data,
+                                                       @RequestPart(value = "photo", required = false) MultipartFile photo) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        groupRequestDto groupRequestDto =
+                mapper.readValue(data, groupRequestDto.class);
+        groupResponseDto group = groupService.criarGrupo(user.getId(),groupRequestDto, photo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(group);
     }
 
     @PostMapping("/enter")

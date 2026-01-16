@@ -10,7 +10,9 @@ import app.Homi.HomiApp.repository.userRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +24,12 @@ public class groupService {
     private final groupRepository groupRepository;
     private final groupMemberRepository groupMemberRepository;
     private final userRepository userRepository;
+    private final imageStoreService imageStorageService;
+    @Value("${app.default-avatar-url}")
+    private String defaultAvatarUrl;
 
     @Transactional
-    public groupResponseDto criarGrupo(UUID id, groupRequestDto groupRequestDto){
+    public groupResponseDto criarGrupo(UUID id, groupRequestDto groupRequestDto, MultipartFile photo){
         groupModel group = groupMapper.toEntity(groupRequestDto);
         group.setConvite(UUID.randomUUID());
         group.setIdUserAdmin(id);
@@ -35,6 +40,19 @@ public class groupService {
         member.setCriador(true);
         member.setIdUser(group.getIdUserAdmin());
         member.setRoleUser("ADMIN");
+
+        if (photo != null && !photo.isEmpty()) {
+            validateImage(photo);
+
+            String photoUrl = imageStorageService.upload(
+                    photo,
+                    "groups",
+                    group.getId().toString()
+            );
+            group.setFotoUrl(photoUrl);
+        } else {
+            group.setFotoUrl(defaultAvatarUrl);
+        }
         groupMemberRepository.save(member);
 
         return groupMapper.toDto(group);
@@ -152,5 +170,15 @@ public class groupService {
                 .orElseThrow(() -> new IllegalArgumentException("\"Usuario ou grupo não encontrados\""));
         groupModel group = groupRepository.findById(idGroup).orElseThrow(() -> new EntityNotFoundException("Usuario ou grupo não encontrados"));
         return groupMapper.toDto(group);
+    }
+
+    private void validateImage(MultipartFile file) {
+        if (!List.of("image/jpeg", "image/png").contains(file.getContentType())) {
+            throw new RuntimeException("Formato de imagem inválido");
+        }
+
+        if (file.getSize() > 2 * 1024 * 1024) {
+            throw new RuntimeException("Imagem maior que 2MB");
+        }
     }
 }
