@@ -35,6 +35,7 @@ public class securityConfig {
                         "POST".equalsIgnoreCase(request.getMethod())
                                 && request.getRequestURI() != null
                                 && request.getRequestURI().endsWith("/auth/register")
+                                && request.getRequestURI().endsWith("/auth/login")
                 ))
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session ->
