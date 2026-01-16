@@ -17,7 +17,12 @@ spring:
       max-lifetime: 60000
       validation-timeout: 5000
       initialization-fail-timeout: 0
-
+      
+  logging:
+    level:
+      org:
+        springframework:
+          security: DEBUG
   jpa:
     hibernate:
       ddl-auto: update
