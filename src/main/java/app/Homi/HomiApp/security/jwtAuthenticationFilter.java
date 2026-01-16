@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -32,32 +33,33 @@ public class jwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
+        // ✅ SE JÁ TIVER AUTENTICADO, NÃO MEXE
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization");
 
-        // 1️⃣ Se não tem token, segue a vida
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 2️⃣ Remove "Bearer "
         String token = authHeader.substring(7);
 
-        // 3️⃣ Valida o token
         if (!jwtService.isTokenValid(token)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 4️⃣ Extrai email do token
         String email = jwtService
                 .extractClaims(token)
                 .get("email", String.class);
 
-        // 5️⃣ Carrega usuário do banco
-        userDetailsImpl userDetails = (userDetailsImpl) userDetailsService.loadUserByUsername(email);
+        userDetailsImpl userDetails =
+                (userDetailsImpl) userDetailsService.loadUserByUsername(email);
 
-        // 6️⃣ Cria autenticação para o Spring
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
                         userDetails,
@@ -65,10 +67,13 @@ public class jwtAuthenticationFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities()
                 );
 
-        // 7️⃣ Coloca no contexto de segurança
+        // 🔥 ISSO AQUI ERA O PROBLEMA
+        authentication.setDetails(
+                new WebAuthenticationDetailsSource().buildDetails(request)
+        );
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // 8️⃣ Continua a requisição
         filterChain.doFilter(request, response);
     }
 }
