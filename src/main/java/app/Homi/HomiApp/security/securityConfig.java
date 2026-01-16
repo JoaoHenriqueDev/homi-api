@@ -34,8 +34,7 @@ public class securityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers(request ->
                         "POST".equalsIgnoreCase(request.getMethod())
                                 && request.getRequestURI() != null
-                                && request.getRequestURI().endsWith("/auth/register")
-                                && request.getRequestURI().endsWith("/auth/login")
+                                && request.getRequestURI().contains("/auth/")
                 ))
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session ->
