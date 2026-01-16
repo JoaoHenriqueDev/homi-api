@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,10 +46,22 @@ public class groupController {
         return ResponseEntity.accepted().build();
     }
 
-    @PutMapping("/update/{idGroup}")
-    public ResponseEntity<groupResponseDto> atualizarGroup(@AuthenticationPrincipal userDetailsImpl user, @PathVariable UUID idGroup, @RequestBody @Valid groupRequestUpdateDto groupRequestDto){
-        groupResponseDto group = groupService.atualizarDadosGrupo(user.getId(), idGroup,groupRequestDto);
-        return ResponseEntity.ok(group);
+    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<groupResponseDto> atualizarDadosGrupo(
+            @AuthenticationPrincipal userDetailsImpl user,
+            @RequestPart("dados") String groupRequestUpdateDto,
+            @RequestPart(value = "foto", required = false) MultipartFile foto,
+            Authentication authentication
+    ) throws JsonProcessingException{
+
+        UUID idUser = ((userDetailsImpl) authentication.getPrincipal()).getId();
+
+        ObjectMapper mapper = new ObjectMapper();
+        groupRequestUpdateDto dadosGrupo = mapper.readValue(groupRequestUpdateDto, groupRequestUpdateDto.class);
+
+        return ResponseEntity.ok(
+                groupService.atualizarDadosGrupo(idUser, user.getId(), dadosGrupo, foto)
+        );
     }
 
     @DeleteMapping("/delete/{idGroup}/user/{idUser}")
@@ -57,7 +70,7 @@ public class groupController {
         return ResponseEntity.accepted().build();
     }
 
-    @GetMapping("/details")
+    @GetMapping("/details/{idGroup}")
     public ResponseEntity<groupResponseDto> groupDetails(@AuthenticationPrincipal userDetailsImpl user, @PathVariable UUID idGroup){
         groupResponseDto group = groupService.detalhesDeGrupo(idGroup, user.getId());
         return ResponseEntity.ok(group);

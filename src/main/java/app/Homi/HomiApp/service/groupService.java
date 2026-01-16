@@ -27,6 +27,7 @@ public class groupService {
     private final groupMemberRepository groupMemberRepository;
     private final userRepository userRepository;
     private final imageStoreService imageStorageService;
+    private final CloudinaryImageStorageService uploadService;
     @Value("${app.default-avatar-url}")
     private String defaultAvatarUrl;
 
@@ -90,21 +91,41 @@ public class groupService {
     }
 
 
-    public groupResponseDto atualizarDadosGrupo(UUID idUser, UUID id, groupRequestUpdateDto groupRequestUpdateDto){
+    public groupResponseDto atualizarDadosGrupo(
+            UUID idUser,
+            UUID id,
+            groupRequestUpdateDto groupRequestUpdateDto,
+            MultipartFile foto
+    ) {
+
         groupMemberModel group = groupMemberRepository
                 .findByIdGroup(id)
                 .stream()
                 .filter(f -> f.getIdUser().equals(idUser))
                 .filter(r -> r.getRoleUser().equals("ADMIN"))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("\"Usuario não encontrado ou não o usuario é admin desse grupo\""));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Usuario não encontrado ou não o usuario é admin desse grupo"
+                ));
+
         groupModel groupEntidade = groupRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
+
         groupEntidade.setName(groupRequestUpdateDto.name());
         groupEntidade.setDescription(groupRequestUpdateDto.description());
+
+        // 🔥 PARTE DA FOTO
+        if (foto != null && !foto.isEmpty()) {
+
+            String fotoUrl = uploadService.upload(foto, "groups", groupEntidade.getId().toString());
+
+            groupEntidade.setFotoUrl(fotoUrl);
+        }
+
         return groupMapper.toDto(groupRepository.save(groupEntidade));
     }
+
 
     public void deletarUsuario(UUID idAdmin, UUID idUser, UUID idGrupo){
         groupMemberModel admin = groupMemberRepository
