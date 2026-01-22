@@ -1,13 +1,6 @@
 package app.Homi.HomiApp.model;
 
-import app.Homi.HomiApp.dto.userRequestDto;
-import app.Homi.HomiApp.dto.userResponseDto;
-import app.Homi.HomiApp.service.userService;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.UUID;
 
 @SpringBootTest
 class userModelTest {

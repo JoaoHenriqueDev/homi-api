@@ -1,8 +1,8 @@
 package app.Homi.HomiApp.mapper;
 
-import app.Homi.HomiApp.dto.userRequestDto;
-import app.Homi.HomiApp.dto.userResponseDto;
-import app.Homi.HomiApp.dto.userResponseGroupDto;
+import app.Homi.HomiApp.dto.user.userRequestDto;
+import app.Homi.HomiApp.dto.user.userResponseDto;
+import app.Homi.HomiApp.dto.user.userResponseGroupDto;
 import app.Homi.HomiApp.model.userModel;
 
 public class userMapper {

@@ -1,8 +1,8 @@
 package app.Homi.HomiApp.mapper;
 
-import app.Homi.HomiApp.dto.groupRequestDto;
-import app.Homi.HomiApp.dto.groupResponseDto;
-import app.Homi.HomiApp.dto.groupResponseListDto;
+import app.Homi.HomiApp.dto.group.groupRequestDto;
+import app.Homi.HomiApp.dto.group.groupResponseDto;
+import app.Homi.HomiApp.dto.group.groupResponseListDto;
 import app.Homi.HomiApp.model.groupModel;
 
 public class groupMapper {

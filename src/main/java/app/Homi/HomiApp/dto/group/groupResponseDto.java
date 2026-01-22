@@ -1,4 +1,4 @@
-package app.Homi.HomiApp.dto;
+package app.Homi.HomiApp.dto.group;
 
 import java.util.UUID;
 

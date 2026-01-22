@@ -1,19 +1,18 @@
 package app.Homi.HomiApp.controller;
 
 import app.Homi.HomiApp.dto.*;
+import app.Homi.HomiApp.dto.user.userRequestUpdateDto;
+import app.Homi.HomiApp.dto.user.userResponseDto;
 import app.Homi.HomiApp.security.userDetailsImpl;
 import app.Homi.HomiApp.service.userService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")

@@ -1,16 +1,12 @@
 package app.Homi.HomiApp.service;
 
-import app.Homi.HomiApp.Enum.userEnum;
-import app.Homi.HomiApp.dto.loginRequestDto;
-import app.Homi.HomiApp.dto.userRequestDto;
-import app.Homi.HomiApp.dto.userRequestUpdateDto;
-import app.Homi.HomiApp.dto.userResponseDto;
+import app.Homi.HomiApp.dto.user.userRequestUpdateDto;
+import app.Homi.HomiApp.dto.user.userResponseDto;
 import app.Homi.HomiApp.mapper.userMapper;
 import app.Homi.HomiApp.model.userModel;
 import app.Homi.HomiApp.repository.userRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

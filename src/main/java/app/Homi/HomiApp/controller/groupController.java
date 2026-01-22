@@ -1,14 +1,12 @@
 package app.Homi.HomiApp.controller;
 
-import app.Homi.HomiApp.dto.groupRequestDto;
-import app.Homi.HomiApp.dto.groupRequestUpdateDto;
-import app.Homi.HomiApp.dto.groupResponseDto;
-import app.Homi.HomiApp.dto.userRequestDto;
+import app.Homi.HomiApp.dto.group.groupRequestDto;
+import app.Homi.HomiApp.dto.group.groupRequestUpdateDto;
+import app.Homi.HomiApp.dto.group.groupResponseDto;
 import app.Homi.HomiApp.security.userDetailsImpl;
 import app.Homi.HomiApp.service.groupService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

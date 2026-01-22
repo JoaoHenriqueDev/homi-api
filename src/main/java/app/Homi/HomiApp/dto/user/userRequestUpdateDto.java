@@ -1,4 +1,4 @@
-package app.Homi.HomiApp.dto;
+package app.Homi.HomiApp.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
