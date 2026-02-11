@@ -64,7 +64,7 @@ public class groupService {
 
     public void entrarNoGrupo(UUID invite, UUID idUser) {
 
-        // 1. Valida usuário
+
         userRepository.findById(idUser)
                 .orElseThrow(() -> new exceptions.NotFoundException("Usuário não encontrado"));
 
