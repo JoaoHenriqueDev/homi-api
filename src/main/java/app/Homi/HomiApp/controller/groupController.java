@@ -47,24 +47,29 @@ public class groupController {
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<groupResponseDto> atualizarDadosGrupo(
             @AuthenticationPrincipal userDetailsImpl user,
-            @RequestPart("dados") String groupRequestUpdateDto,
-            @RequestPart(value = "foto", required = false) MultipartFile foto,
+            @PathVariable UUID id,
+            @RequestPart("data") String groupRequestUpdateDto,
+            @RequestPart(value = "photo", required = false) MultipartFile foto,
             Authentication authentication
     ) throws JsonProcessingException{
-
-        UUID idUser = ((userDetailsImpl) authentication.getPrincipal()).getId();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         ObjectMapper mapper = new ObjectMapper();
         groupRequestUpdateDto dadosGrupo = mapper.readValue(groupRequestUpdateDto, groupRequestUpdateDto.class);
 
         return ResponseEntity.ok(
-                groupService.atualizarDadosGrupo(idUser, user.getId(), dadosGrupo, foto)
+                groupService.atualizarDadosGrupo(user.getId(), id, dadosGrupo, foto)
         );
     }
 
-    @DeleteMapping("/delete/{idGroup}/user/{idUser}")
-    public ResponseEntity<groupResponseDto> deleteUserGroup(@AuthenticationPrincipal userDetailsImpl user, @PathVariable UUID idUser, @PathVariable UUID idGroup){
-        groupService.deletarUsuario(user.getId(),idUser,idGroup);
+    @DeleteMapping("/delete/{idGroup}/user")
+    public ResponseEntity<groupResponseDto> deleteUserGroup(@AuthenticationPrincipal userDetailsImpl user,
+                                                            @RequestPart("idUsuario") String idUser,
+                                                            @PathVariable UUID idGroup){
+        UUID idUsuario = UUID.fromString(idUser);
+        groupService.deletarUsuario(user.getId(),idUsuario,idGroup);
         return ResponseEntity.accepted().build();
     }
 

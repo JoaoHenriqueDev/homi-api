@@ -13,10 +13,11 @@ public class userMapper {
         user.setName(userRequestDto.name());
         user.setCelular(userRequestDto.celular());
         user.setPassword(userRequestDto.password());
+        user.setCpf(userRequestDto.cpf());
         return user;
     };
     public static userResponseDto toDto(userModel user){
-        return new userResponseDto(user.getId(),user.getEmail(),user.getName(),user.getFotoURL(),user.getCelular());
+        return new userResponseDto(user.getId(),user.getEmail(),user.getName(),user.getFotoURL(),user.getCelular(), user.getCpf());
     };
     public static userResponseGroupDto toDtoFamily(userModel user){
         return new userResponseGroupDto(user.getName(),user.getFotoURL());

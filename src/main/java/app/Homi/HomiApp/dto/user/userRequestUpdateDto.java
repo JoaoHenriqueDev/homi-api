@@ -10,5 +10,7 @@ public record userRequestUpdateDto(
         @NotBlank(message = "Um ou mais campos não foram preenchidos corretamente")
         String name,
         @NotBlank(message = "Um ou mais campos não foram preenchidos corretamente")
-        String celular) {
+        String celular,
+        @NotBlank(message = "Um ou mais campos não foram preenchidos corretamente")
+        String cpf) {
 }

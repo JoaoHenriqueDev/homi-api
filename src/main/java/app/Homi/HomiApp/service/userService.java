@@ -30,8 +30,8 @@ public class userService {
         user.setName(userRequestUpdateDto.name());
         user.setEmail(userRequestUpdateDto.email());
         user.setCelular(userRequestUpdateDto.celular());
+        user.setCpf(userRequestUpdateDto.cpf());
 
-        // 🔥 PARTE DA FOTO
         if (foto != null && !foto.isEmpty()) {
 
             String fotoUrl = uploadService.upload(foto, "users", user.getId().toString());

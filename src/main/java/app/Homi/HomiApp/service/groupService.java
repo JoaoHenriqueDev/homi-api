@@ -102,11 +102,11 @@ public class groupService {
         groupMemberModel group = groupMemberRepository
                 .findByIdGroup(id)
                 .stream()
-                .filter(f -> f.getIdUser().equals(idUser))
-                .filter(r -> r.getRoleUser().equals("ADMIN"))
+                .filter(f -> idUser.equals(f.getIdUser()))
+                .filter(r -> "ADMIN".equalsIgnoreCase(r.getRoleUser()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(
-                        "Usuario não encontrado ou não o usuario é admin desse grupo"
+                        "Usuario não encontrado ou o usuario não é admin desse grupo"
                 ));
 
         groupModel groupEntidade = groupRepository
@@ -116,7 +116,6 @@ public class groupService {
         groupEntidade.setName(groupRequestUpdateDto.name());
         groupEntidade.setDescription(groupRequestUpdateDto.description());
 
-        // 🔥 PARTE DA FOTO
         if (foto != null && !foto.isEmpty()) {
 
             String fotoUrl = uploadService.upload(foto, "groups", groupEntidade.getId().toString());
